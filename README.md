@@ -1,5 +1,9 @@
 # runtime
 
+[![ci](https://github.com/pilot-protocol/runtime/actions/workflows/ci.yml/badge.svg)](https://github.com/pilot-protocol/runtime/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/pilot-protocol/runtime/branch/main/graph/badge.svg)](https://codecov.io/gh/pilot-protocol/runtime)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 Runtime glue for the Pilot Protocol daemon. Wires the major subsystems
 together — handshake, policy, identity, events, streams — into a single
 `Runtime` value the daemon's `main.go` constructs and hands to the
@@ -38,3 +42,7 @@ rt.Run(ctx)
 | `handshake.go` | Adapter that exposes the handshake plugin to the runtime. |
 | `policy.go` | Adapter that exposes the policy plugin to the runtime. |
 | `policy_manager.go` | Per-network policy-file load and reload helpers. |
+
+## License
+
+AGPL-3.0-or-later. See [LICENSE](LICENSE).
