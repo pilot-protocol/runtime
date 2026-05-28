@@ -16,3 +16,5 @@ require (
 )
 
 replace github.com/TeoSlayer/pilotprotocol => ../web4
+
+replace github.com/pilot-protocol/common => ../common

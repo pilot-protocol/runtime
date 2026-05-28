@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/TeoSlayer/pilotprotocol/pkg/coreapi"
+	"github.com/pilot-protocol/common/coreapi"
 	"github.com/pilot-protocol/runtime"
 )
 
