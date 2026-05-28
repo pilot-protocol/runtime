@@ -5,7 +5,6 @@ package runtime
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/TeoSlayer/pilotprotocol/pkg/coreapi"
 	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
@@ -78,9 +77,7 @@ func (s *streamAdapter) LocalPort() uint16        { return s.conn.LocalPort }
 func (s *streamAdapter) RemoteAddr() coreapi.Addr { return s.conn.RemoteAddr }
 func (s *streamAdapter) RemotePort() uint16       { return s.conn.RemotePort }
 
-func (s *streamAdapter) SetDeadline(time.Time) error      { return nil }
-func (s *streamAdapter) SetReadDeadline(time.Time) error  { return nil }
-func (s *streamAdapter) SetWriteDeadline(time.Time) error { return nil }
+
 
 var (
 	_ coreapi.Streams  = daemonStreams{}

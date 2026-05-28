@@ -9,7 +9,6 @@ import (
 	"net"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/TeoSlayer/pilotprotocol/pkg/coreapi"
 	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
@@ -155,16 +154,9 @@ func TestDaemonListener_AcceptDeliversStreamWithAccessors(t *testing.T) {
 		t.Errorf("RemotePort = %d, want 8888", got)
 	}
 
-	// The deadline shims are documented no-ops returning nil.
-	if err := stream.SetDeadline(time.Now().Add(time.Hour)); err != nil {
-		t.Errorf("SetDeadline: %v", err)
-	}
-	if err := stream.SetReadDeadline(time.Now().Add(time.Hour)); err != nil {
-		t.Errorf("SetReadDeadline: %v", err)
-	}
-	if err := stream.SetWriteDeadline(time.Now().Add(time.Hour)); err != nil {
-		t.Errorf("SetWriteDeadline: %v", err)
-	}
+	// Deadline methods were removed from coreapi.Stream (PILOT-79).
+	// The runtime cannot honor them; removing from the interface
+	// gives callers a compile-time signal instead of a silent no-op.
 
 	// Closing the stream goes through daemon.CloseConnection, which for
 	// a synthetic conn in StateClosed exits via the non-ESTABLISHED
