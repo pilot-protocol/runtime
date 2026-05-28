@@ -15,4 +15,4 @@ require (
 	github.com/pilot-protocol/trustedagents v0.1.0 // indirect
 )
 
-replace github.com/TeoSlayer/pilotprotocol => /home/node/.openclaw/workspace/repos/web4
+replace github.com/TeoSlayer/pilotprotocol => ../web4
