@@ -3,17 +3,17 @@
 package runtime
 
 import (
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/common/daemonapi"
 	"github.com/pilot-protocol/policy"
 )
 
-// PolicyRuntime adapts *daemon.Daemon to the policy.Runtime interface.
+// PolicyRuntime adapts daemonapi.Daemon to the policy.Runtime interface.
 // Lives here (L12 composition root) so plugins/policy stays free of
 // pkg/daemon.
-type PolicyRuntime struct{ d *daemon.Daemon }
+type PolicyRuntime struct{ d daemonapi.Daemon }
 
 // NewPolicyRuntime returns a policy.Runtime backed by d.
-func NewPolicyRuntime(d *daemon.Daemon) policy.Runtime {
+func NewPolicyRuntime(d daemonapi.Daemon) policy.Runtime {
 	return PolicyRuntime{d: d}
 }
 

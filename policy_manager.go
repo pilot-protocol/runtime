@@ -4,14 +4,14 @@ package runtime
 
 import (
 	"github.com/pilot-protocol/common/coreapi"
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/common/daemonapi"
 )
 
 // AsDaemonPolicyManager adapts a coreapi.PolicyManager (returned by
-// plugins/policy.Service.Manager()) to daemon.PolicyManager. The two
+// plugins/policy.Service.Manager()) to daemonapi.PolicyManager. The two
 // interfaces have identical method shapes; the adapter does the
 // PolicyRunner element-type conversion on All() and Get().
-func AsDaemonPolicyManager(pm coreapi.PolicyManager) daemon.PolicyManager {
+func AsDaemonPolicyManager(pm coreapi.PolicyManager) daemonapi.PolicyManager {
 	if pm == nil {
 		return nil
 	}
@@ -20,7 +20,7 @@ func AsDaemonPolicyManager(pm coreapi.PolicyManager) daemon.PolicyManager {
 
 type policyManagerAdapter struct{ inner coreapi.PolicyManager }
 
-func (a policyManagerAdapter) Start(netID uint16, policyJSON []byte) (daemon.PolicyRunner, error) {
+func (a policyManagerAdapter) Start(netID uint16, policyJSON []byte) (daemonapi.PolicyRunner, error) {
 	pr, err := a.inner.Start(netID, policyJSON)
 	if err != nil {
 		return nil, err
@@ -30,13 +30,13 @@ func (a policyManagerAdapter) Start(netID uint16, policyJSON []byte) (daemon.Pol
 
 func (a policyManagerAdapter) Stop(netID uint16) { a.inner.Stop(netID) }
 
-func (a policyManagerAdapter) Get(netID uint16) daemon.PolicyRunner {
+func (a policyManagerAdapter) Get(netID uint16) daemonapi.PolicyRunner {
 	return wrapRunner(a.inner.Get(netID))
 }
 
-func (a policyManagerAdapter) All() []daemon.PolicyRunner {
+func (a policyManagerAdapter) All() []daemonapi.PolicyRunner {
 	src := a.inner.All()
-	out := make([]daemon.PolicyRunner, 0, len(src))
+	out := make([]daemonapi.PolicyRunner, 0, len(src))
 	for _, pr := range src {
 		out = append(out, wrapRunner(pr))
 	}
@@ -46,11 +46,11 @@ func (a policyManagerAdapter) All() []daemon.PolicyRunner {
 func (a policyManagerAdapter) StopAll()             { a.inner.StopAll() }
 func (a policyManagerAdapter) LoadPersisted() error { return a.inner.LoadPersisted() }
 
-// wrapRunner converts a coreapi.PolicyRunner to a daemon.PolicyRunner.
+// wrapRunner converts a coreapi.PolicyRunner to a daemonapi.PolicyRunner.
 // The methods are structurally compatible (PolicyEventType is a type
 // alias to string), but Go's named-interface typing requires an
 // explicit shim.
-func wrapRunner(pr coreapi.PolicyRunner) daemon.PolicyRunner {
+func wrapRunner(pr coreapi.PolicyRunner) daemonapi.PolicyRunner {
 	if pr == nil {
 		return nil
 	}

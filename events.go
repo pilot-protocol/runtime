@@ -4,15 +4,15 @@ package runtime
 
 import (
 	"github.com/pilot-protocol/common/coreapi"
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/common/daemonapi"
 )
 
 // daemonEventBus adapts daemon's in-process bus to coreapi.EventBus
 // for plugin Deps. Publish forwards through Daemon.PublishEvent;
-// Subscribe wraps the bus channel with type conversion daemon.Event
+// Subscribe wraps the bus channel with type conversion daemonapi.Event
 // → coreapi.Event.
 
-type daemonEventBus struct{ d *daemon.Daemon }
+type daemonEventBus struct{ d daemonapi.Daemon }
 
 func (b daemonEventBus) Publish(topic string, payload map[string]any) {
 	if b.d == nil {

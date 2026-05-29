@@ -7,14 +7,14 @@ import (
 	"errors"
 
 	"github.com/pilot-protocol/common/coreapi"
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/common/daemonapi"
 )
 
 // daemonIdentity adapts daemon's identity state to coreapi.Identity
 // for plugin Deps. Methods that need the underlying *crypto.Identity
 // (PublicKey, Sign) go through Daemon.Identity().
 
-type daemonIdentity struct{ d *daemon.Daemon }
+type daemonIdentity struct{ d daemonapi.Daemon }
 
 func (i daemonIdentity) NodeID() uint32        { return i.d.NodeID() }
 func (i daemonIdentity) Address() coreapi.Addr { return i.d.Addr() }
