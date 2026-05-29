@@ -14,7 +14,7 @@ import (
 	"context"
 
 	"github.com/pilot-protocol/common/coreapi"
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/common/daemonapi"
 )
 
 // Runtime owns the plugin-side glue for a single daemon. cmd/daemon
@@ -22,18 +22,18 @@ import (
 // after Daemon.Start (so regConn etc. are wired) and StopPlugins
 // before Daemon.Stop.
 type Runtime struct {
-	d        *daemon.Daemon
+	d        daemonapi.Daemon
 	registry *coreapi.ServiceRegistry
 }
 
 // New returns a Runtime bound to the given daemon. Safe to call
 // before d.Start.
-func New(d *daemon.Daemon) *Runtime {
+func New(d daemonapi.Daemon) *Runtime {
 	return &Runtime{d: d, registry: &coreapi.ServiceRegistry{}}
 }
 
 // Daemon returns the underlying daemon (test access).
-func (r *Runtime) Daemon() *daemon.Daemon { return r.d }
+func (r *Runtime) Daemon() daemonapi.Daemon { return r.d }
 
 // Register adds a service to the registry. Mirrors the old
 // daemon.RegisterPlugin. Must be called before StartPlugins.
@@ -60,18 +60,18 @@ func (r *Runtime) StopPlugins(ctx context.Context) error {
 	return r.registry.StopAll(ctx)
 }
 
-// asCoreapiTrust adapts a daemon.TrustChecker (primitives) to the
+// asCoreapiTrust adapts a daemonapi.TrustChecker (primitives) to the
 // coreapi.TrustChecker plugins expect. Structurally identical
 // signatures, but Go's interface-typing requires an explicit bridge
 // when the named types differ. nil → nil (no plugin → no auto-accept).
-func asCoreapiTrust(t daemon.TrustChecker) coreapi.TrustChecker {
+func asCoreapiTrust(t daemonapi.TrustChecker) coreapi.TrustChecker {
 	if t == nil {
 		return nil
 	}
 	return trustAdapter{inner: t}
 }
 
-type trustAdapter struct{ inner daemon.TrustChecker }
+type trustAdapter struct{ inner daemonapi.TrustChecker }
 
 func (a trustAdapter) IsTrusted(nodeID uint32) (string, bool) {
 	return a.inner.IsTrusted(nodeID)

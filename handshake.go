@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/pilot-protocol/common/coreapi"
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/common/daemonapi"
 	"github.com/pilot-protocol/common/protocol"
 	registryclient "github.com/pilot-protocol/common/registry/client"
 	"github.com/pilot-protocol/handshake"
@@ -17,13 +17,13 @@ import (
 // handshakeCloseDelay matches plugins/handshake.HandshakeCloseDelay.
 const handshakeCloseDelay = 500 * time.Millisecond
 
-// HandshakeRuntime adapts *daemon.Daemon to the handshake.Runtime
+// HandshakeRuntime adapts daemonapi.Daemon to the handshake.Runtime
 // interface. Lives here (L12 composition root) so plugins/handshake
 // stays free of pkg/daemon.
-type HandshakeRuntime struct{ d *daemon.Daemon }
+type HandshakeRuntime struct{ d daemonapi.Daemon }
 
 // NewHandshakeRuntime returns a handshake.Runtime backed by d.
-func NewHandshakeRuntime(d *daemon.Daemon) handshake.Runtime {
+func NewHandshakeRuntime(d daemonapi.Daemon) handshake.Runtime {
 	return HandshakeRuntime{d: d}
 }
 
@@ -95,22 +95,22 @@ func (r HandshakeRuntime) Registry() handshake.RegistryClient {
 }
 
 // handshakeServiceAdapter converts between plugins/handshake types and
-// the daemon-local daemon.HandshakeService mirror types.
+// the daemon-local daemonapi.HandshakeService mirror types.
 type handshakeServiceAdapter struct{ m *handshake.Manager }
 
 // NewHandshakeServiceAdapter wraps a *handshake.Service so it satisfies
-// daemon.HandshakeService.
-func NewHandshakeServiceAdapter(svc *handshake.Service) daemon.HandshakeService {
+// daemonapi.HandshakeService.
+func NewHandshakeServiceAdapter(svc *handshake.Service) daemonapi.HandshakeService {
 	return handshakeServiceAdapter{m: svc.Manager()}
 }
 
 func (a handshakeServiceAdapter) IsTrusted(nodeID uint32) bool { return a.m.IsTrusted(nodeID) }
 
-func (a handshakeServiceAdapter) TrustedPeers() []daemon.HandshakeTrustRecord {
+func (a handshakeServiceAdapter) TrustedPeers() []daemonapi.HandshakeTrustRecord {
 	src := a.m.TrustedPeers()
-	out := make([]daemon.HandshakeTrustRecord, len(src))
+	out := make([]daemonapi.HandshakeTrustRecord, len(src))
 	for i, r := range src {
-		out[i] = daemon.HandshakeTrustRecord{
+		out[i] = daemonapi.HandshakeTrustRecord{
 			NodeID:     r.NodeID,
 			PublicKey:  r.PublicKey,
 			ApprovedAt: r.ApprovedAt,
@@ -121,11 +121,11 @@ func (a handshakeServiceAdapter) TrustedPeers() []daemon.HandshakeTrustRecord {
 	return out
 }
 
-func (a handshakeServiceAdapter) PendingRequests() []daemon.HandshakePendingRecord {
+func (a handshakeServiceAdapter) PendingRequests() []daemonapi.HandshakePendingRecord {
 	src := a.m.PendingRequests()
-	out := make([]daemon.HandshakePendingRecord, len(src))
+	out := make([]daemonapi.HandshakePendingRecord, len(src))
 	for i, p := range src {
-		out[i] = daemon.HandshakePendingRecord{
+		out[i] = daemonapi.HandshakePendingRecord{
 			NodeID:        p.NodeID,
 			PublicKey:     p.PublicKey,
 			Justification: p.Justification,
@@ -174,6 +174,6 @@ func (a handshakeServiceAdapter) Stop() { a.m.Stop() }
 // Compile-time guards.
 var (
 	_ handshake.Runtime        = HandshakeRuntime{}
-	_ daemon.HandshakeService  = handshakeServiceAdapter{}
+	_ daemonapi.HandshakeService  = handshakeServiceAdapter{}
 	_ handshake.RegistryClient = (*registryclient.Client)(nil)
 )

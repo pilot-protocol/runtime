@@ -7,13 +7,13 @@ import (
 	"errors"
 
 	"github.com/pilot-protocol/common/coreapi"
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/common/daemonapi"
 )
 
 // daemonStreams is the in-process implementation of coreapi.Streams.
 // Lives here (plugins/runtime) so daemon doesn't carry the L10 import.
 
-type daemonStreams struct{ d *daemon.Daemon }
+type daemonStreams struct{ d daemonapi.Daemon }
 
 func (s daemonStreams) Listen(port uint16) (coreapi.Listener, error) {
 	ln, err := s.d.Ports().Bind(port)
@@ -36,12 +36,12 @@ func (s daemonStreams) SendDatagram(ctx context.Context, dst coreapi.Addr, port 
 }
 
 type daemonListener struct {
-	inner *daemon.Listener
-	d     *daemon.Daemon
+	inner daemonapi.Listener
+	d     daemonapi.Daemon
 }
 
 func (l *daemonListener) Accept() (coreapi.Stream, error) {
-	conn, ok := <-l.inner.AcceptCh
+	conn, ok := l.inner.Accept()
 	if !ok {
 		return nil, errors.New("listener closed")
 	}
@@ -49,22 +49,22 @@ func (l *daemonListener) Accept() (coreapi.Stream, error) {
 }
 
 func (l *daemonListener) Close() error {
-	l.d.Ports().Unbind(l.inner.Port)
+	l.d.Ports().Unbind(l.inner.Port())
 	return nil
 }
 
 func (l *daemonListener) Addr() coreapi.Addr { return l.d.Addr() }
-func (l *daemonListener) Port() uint16       { return l.inner.Port }
+func (l *daemonListener) Port() uint16       { return l.inner.Port() }
 
-// streamAdapter wraps *daemon.Connection so it satisfies coreapi.Stream.
+// streamAdapter wraps daemonapi.Connection so it satisfies coreapi.Stream.
 // Daemon exposes a connAdapter via Daemon.NewConnAdapter for this.
 type streamAdapter struct {
-	d    *daemon.Daemon
-	conn *daemon.Connection
-	rw   daemon.ConnReadWriter
+	d    daemonapi.Daemon
+	conn daemonapi.Connection
+	rw   daemonapi.ConnReadWriter
 }
 
-func newStreamAdapter(d *daemon.Daemon, conn *daemon.Connection) *streamAdapter {
+func newStreamAdapter(d daemonapi.Daemon, conn daemonapi.Connection) *streamAdapter {
 	return &streamAdapter{d: d, conn: conn, rw: d.NewConnReadWriter(conn)}
 }
 
@@ -72,10 +72,10 @@ func (s *streamAdapter) Read(p []byte) (int, error)  { return s.rw.Read(p) }
 func (s *streamAdapter) Write(p []byte) (int, error) { return s.rw.Write(p) }
 func (s *streamAdapter) Close() error                { return s.rw.Close() }
 
-func (s *streamAdapter) LocalAddr() coreapi.Addr  { return s.conn.LocalAddr }
-func (s *streamAdapter) LocalPort() uint16        { return s.conn.LocalPort }
-func (s *streamAdapter) RemoteAddr() coreapi.Addr { return s.conn.RemoteAddr }
-func (s *streamAdapter) RemotePort() uint16       { return s.conn.RemotePort }
+func (s *streamAdapter) LocalAddr() coreapi.Addr  { return s.conn.Info().LocalAddr }
+func (s *streamAdapter) LocalPort() uint16        { return s.conn.Info().LocalPort }
+func (s *streamAdapter) RemoteAddr() coreapi.Addr { return s.conn.Info().RemoteAddr }
+func (s *streamAdapter) RemotePort() uint16       { return s.conn.Info().RemotePort }
 
 
 
