@@ -30,11 +30,11 @@ jobs:
           repository: pilot-protocol/common
           path: common
 
-      - name: Checkout "handshake"
+      - name: Checkout handshake
         uses: actions/checkout@v4
         with:
-          repository: pilot-protocol/"handshake"
-          path: "handshake"
+          repository: pilot-protocol/handshake
+          path: handshake
 
       - uses: actions/setup-go@v5
         with:
