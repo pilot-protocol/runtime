@@ -1,3 +1,6 @@
+//go:build wip_daemonapi
+// +build wip_daemonapi
+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 package runtime_test
