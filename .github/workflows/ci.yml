@@ -120,6 +120,10 @@ jobs:
           cache: true
           cache-dependency-path: runtime/go.sum
 
+      - name: Tidy (runtime) go.mod (absorb sibling drift)
+        working-directory: runtime
+        run: go mod tidy
+
       - name: Run tests with coverage
         working-directory: runtime
         run: go test -race -coverprofile=coverage.out -covermode=atomic ./...
