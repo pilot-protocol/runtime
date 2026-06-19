@@ -5,7 +5,7 @@ package runtime
 import (
 	"testing"
 
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/pilotprotocol/pkg/daemon"
 )
 
 // fakeTrustChecker implements daemon.TrustChecker.

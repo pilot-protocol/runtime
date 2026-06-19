@@ -14,7 +14,7 @@ import (
 	"testing"
 
 	"github.com/pilot-protocol/common/coreapi"
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/pilotprotocol/pkg/daemon"
 	"github.com/pilot-protocol/common/protocol"
 	"github.com/pilot-protocol/handshake"
 	"github.com/pilot-protocol/runtime"
