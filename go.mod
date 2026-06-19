@@ -3,7 +3,7 @@ module github.com/pilot-protocol/runtime
 go 1.25.10
 
 require (
-	github.com/TeoSlayer/pilotprotocol v1.10.5
+	github.com/pilot-protocol/pilotprotocol v1.10.5
 	github.com/pilot-protocol/common v0.4.0
 	github.com/pilot-protocol/handshake v0.1.0
 	github.com/pilot-protocol/policy v0.1.0
@@ -15,7 +15,7 @@ require (
 	github.com/pilot-protocol/trustedagents v0.1.0 // indirect
 )
 
-replace github.com/TeoSlayer/pilotprotocol => ../web4
+replace github.com/pilot-protocol/pilotprotocol => ../web4
 
 replace github.com/pilot-protocol/common => ../common
 

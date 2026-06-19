@@ -8,7 +8,7 @@ package runtime_test
 import (
 	"testing"
 
-	"github.com/TeoSlayer/pilotprotocol/pkg/daemon"
+	"github.com/pilot-protocol/pilotprotocol/pkg/daemon"
 	"github.com/pilot-protocol/handshake"
 	"github.com/pilot-protocol/runtime"
 )
