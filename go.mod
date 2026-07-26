@@ -3,7 +3,7 @@ module github.com/pilot-protocol/runtime
 go 1.25.12
 
 require (
-	github.com/pilot-protocol/common v0.5.9
+	github.com/pilot-protocol/common v0.5.10
 	github.com/pilot-protocol/handshake v0.2.5
 	github.com/pilot-protocol/pilotprotocol v1.13.2
 	github.com/pilot-protocol/policy v0.2.3
@@ -12,6 +12,7 @@ require (
 require (
 	github.com/coder/websocket v1.8.15 // indirect
 	github.com/expr-lang/expr v1.17.8 // indirect
+	github.com/pilot-protocol/rendezvous v0.2.7 // indirect
 	github.com/pilot-protocol/trustedagents v0.2.5 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 )
