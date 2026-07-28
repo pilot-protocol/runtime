@@ -32,11 +32,30 @@ func (b daemonEventBus) Subscribe(pattern string) (<-chan coreapi.Event, func())
 	go func() {
 		defer close(out)
 		for ev := range src {
-			out <- coreapi.Event{
+			// Non-blocking, drop-on-full. The underlying bus deliberately
+			// drops rather than blocking its publishers; forwarding with a
+			// blocking send silently converted those semantics and turned
+			// this adapter into a goroutine leak.
+			//
+			// If a plugin consumer stopped draining `out` — its handler
+			// loop exited, panicked past a recover, or simply ran slower
+			// than the publisher for cap(src) events — this goroutine
+			// parked on the send forever, retaining itself, the buffered
+			// contents of src, and every payload map they referenced.
+			// cancel() does not rescue it: cancel closes src, which does
+			// nothing for a goroutine already blocked sending to out.
+			//
+			// Dropping matches what the bus would have done anyway once
+			// the buffer filled, so a slow consumer now loses events
+			// instead of leaking a goroutine for the process lifetime.
+			select {
+			case out <- coreapi.Event{
 				Topic:   ev.Topic,
 				NodeID:  ev.NodeID,
 				Time:    ev.Time,
 				Payload: ev.Payload,
+			}:
+			default:
 			}
 		}
 	}()
