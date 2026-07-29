@@ -6,12 +6,12 @@ github.com/pilot-protocol/common v0.5.11 h1:gaPOT2v3/FUAx61lqPw7yRsrzmDSRWL4+LRu
 github.com/pilot-protocol/common v0.5.11/go.mod h1:Ybc6f1A37s3ShoEh1nBMVL9DPyYlxvkqPTvtbxaNWg4=
 github.com/pilot-protocol/handshake v0.2.6 h1:DmUL8NEbNOKMRgg5seAfRnwoZgayzqQ1ksi+U7yu6RM=
 github.com/pilot-protocol/handshake v0.2.6/go.mod h1:Vkz+02DEAyPL++maW7oHHu/DKriPhL3/+BGY+dlHKrQ=
-github.com/pilot-protocol/pilotprotocol v1.13.6 h1:KHsjbHxryuYT+eOJZQz5OMxvettfa/1Iy+rUWPfuPsA=
-github.com/pilot-protocol/pilotprotocol v1.13.6/go.mod h1:0z3RnYlS7GPuKb6yYhlx3f9lh3iHQJbFsGyzNb6gVe4=
+github.com/pilot-protocol/pilotprotocol v1.13.4 h1:gX6KN/eDAmnUMSTtRSWGzeBkmYtgsFtD73WM394raNc=
+github.com/pilot-protocol/pilotprotocol v1.13.4/go.mod h1:frjiZWZ0/c1AC0tVIS0+O6cE26N57+TFYVjLleafMqY=
 github.com/pilot-protocol/policy v0.2.3 h1:sonEBL82oGjj1zyMQjJJ5cw+0KQdjS1sgHiLmIVWb8g=
 github.com/pilot-protocol/policy v0.2.3/go.mod h1:ALQdPalluwdzd3AbqbR+iNU5jJc/aG79n9ym0vhhF7w=
-github.com/pilot-protocol/rendezvous v0.2.7 h1:676cSBYGpkkg5FK6AioGLarixPrTwlky5b13LSpqY/4=
-github.com/pilot-protocol/rendezvous v0.2.7/go.mod h1:sv0TuqAosOCe3f3EIuZ9lmrNaHJTqyy5k/UGFqHskB4=
+github.com/pilot-protocol/rendezvous v0.2.8 h1:GRJyNplqNrfhPuCUgOAaY5Dg5En4G2aO+W2oCNKuIlo=
+github.com/pilot-protocol/rendezvous v0.2.8/go.mod h1:sv0TuqAosOCe3f3EIuZ9lmrNaHJTqyy5k/UGFqHskB4=
 github.com/pilot-protocol/trustedagents v0.2.5 h1:zdeezxalidXanOkEcdsageyAp6jVbfhAnPumREbEZt0=
 github.com/pilot-protocol/trustedagents v0.2.5/go.mod h1:6P0pBKmjKlfiSsCbl7EAIr96LW/9RnoLzdl+rEqmN5E=
 golang.org/x/sys v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=
