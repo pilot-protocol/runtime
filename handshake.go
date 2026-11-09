@@ -4,6 +4,7 @@ package runtime
 
 import (
 	"crypto/ed25519"
+	"encoding/base64"
 	"fmt"
 	"time"
 
@@ -57,6 +58,30 @@ func (r HandshakeRuntime) IsTrusted(nodeID uint32) (string, bool) {
 	return tc.IsTrusted(nodeID)
 }
 
+// IsTrustedWithKey is handshake.KeyedTrustChecker: the trusted-agents list
+// with an entry's key pin checked against the key the peer presented. The
+// handshake manager asks this when it implements it, and otherwise falls
+// back to IsTrusted, which never checked pins. A checker without pin
+// support answers by node id as before; a key that isn't valid base64 is
+// not trusted.
+func (r HandshakeRuntime) IsTrustedWithKey(nodeID uint32, pubKeyB64 string) (string, bool) {
+	tc := r.d.GetTrustChecker()
+	if tc == nil {
+		return "", false
+	}
+	kc, ok := tc.(interface {
+		IsTrustedWithKey(nodeID uint32, pubKey []byte) (string, bool)
+	})
+	if !ok {
+		return tc.IsTrusted(nodeID)
+	}
+	key, err := base64.StdEncoding.DecodeString(pubKeyB64)
+	if err != nil {
+		return "", false
+	}
+	return kc.IsTrustedWithKey(nodeID, key)
+}
+
 func (r HandshakeRuntime) PublishEvent(topic string, payload map[string]any) {
 	r.d.PublishEvent(topic, payload)
 }
@@ -105,6 +130,22 @@ func NewHandshakeServiceAdapter(svc *handshake.Service) daemonapi.HandshakeServi
 }
 
 func (a handshakeServiceAdapter) IsTrusted(nodeID uint32) bool { return a.m.IsTrusted(nodeID) }
+
+// IsTrustedWithKey passes the daemon's key-bound trust check through to the
+// handshake manager. The daemon type-asserts its handshake service for this
+// method; without it the daemon's key checks fell back to node id alone.
+func (a handshakeServiceAdapter) IsTrustedWithKey(nodeID uint32, pubKeyB64 string) bool {
+	return a.m.IsTrustedWithKey(nodeID, pubKeyB64)
+}
+
+// The daemon's and the handshake manager's optional, key-bound interfaces:
+// a missing method here silently weakens their checks to node id.
+var (
+	_ interface {
+		IsTrustedWithKey(nodeID uint32, pubKeyB64 string) bool
+	} = handshakeServiceAdapter{}
+	_ handshake.KeyedTrustChecker = HandshakeRuntime{}
+)
 
 func (a handshakeServiceAdapter) TrustedPeers() []daemonapi.HandshakeTrustRecord {
 	src := a.m.TrustedPeers()
